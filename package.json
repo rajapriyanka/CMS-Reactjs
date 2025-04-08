@@ -1,4 +1,7 @@
 {
+  set SKIP_PREFLIGHT_CHECK=true && npm run build
+
+  
   
   "name": "lms",
   "version": "0.1.0",
