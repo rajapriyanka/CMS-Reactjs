@@ -577,12 +577,14 @@ const StudentData = () => {
                       <td>{student.department || "N/A"}</td>
                       <td>{student.batchName || "N/A"}</td>
                       <td>
+                        <div className="stu-list-action-btns">
                         <button onClick={() => handleEdit(student)} className="stud-edit-button">
                           Edit
                         </button>
                         <button onClick={() => handleDelete(student.id)} className="stud-delete-button">
                           Delete
                         </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

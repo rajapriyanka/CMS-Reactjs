@@ -125,9 +125,11 @@
 
 .student-list th,
 .student-list td {
-  padding: 14px;
+  padding: 12px;
   text-align: left;
   border: 1px solid #ddd;
+  vertical-align: middle;
+  white-space: nowrap; /* Prevent wrapping */
 }
 
 .student-list th {
@@ -135,20 +137,40 @@
   color: white;
 }
 
+/* Optional: Prevent action buttons column from shrinking */
+.student-list th:last-child,
+.student-list td:last-child {
+  min-width: 140px;
+}
+
 .student-list tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
+/* Action Buttons Container */
+.stud-list-action-btns {
+  display: inline-flex;         /* Prevents line-break */
+  gap: 10px;                    /* Space between buttons */
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Action Buttons */
 .student-list .stud-edit-button,
 .student-list .stud-delete-button {
-  padding: 6px 9px;
-  margin-right: 6px;
+  padding: 4px 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
+  display: inline-block;
+  min-width: 60px;
+  text-align: center;
+  white-space: nowrap;
 }
 
+/* Edit Button */
 .student-list .stud-edit-button {
   background-color: #013c28;
   color: white;
@@ -159,6 +181,7 @@
   color: white;
 }
 
+/* Delete Button */
 .student-list .stud-delete-button {
   background-color: #f44336;
   color: white;
@@ -168,6 +191,7 @@
   background-color: #900c03;
   color: white;
 }
+
 
 /* Registration Form */
 .stud-register-form {
