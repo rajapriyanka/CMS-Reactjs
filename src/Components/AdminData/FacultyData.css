@@ -3,11 +3,17 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-image: url("../../assets/admin-bg3.webp");
+  background-size: cover;     /* scale image to cover the element */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat;
+  
 }
 
 .fac-data-container {
   display: flex;
   flex: 1;
+  
 }
 
 /* Sidebar */
@@ -17,8 +23,8 @@
   width: 20%;
   padding: 20px;
   box-sizing: border-box;
-  box-shadow: 0px 4px 10px #013c28;
-  height: 635px;
+  box-shadow: 0px 4px 10px #025d1f;
+  height: 100%;
 }
 
 .fac-sidebar h2 {
@@ -56,6 +62,7 @@
   padding: 20px;
   box-sizing: border-box;
   align-items: center; /* Center the main content */
+  
 }
 
 .fac-main-content {
@@ -108,8 +115,10 @@
   color: white;
 }
 
-.faculty-list tr:nth-child(even) {
+
+.faculty-list tr {
   background-color: #f2f2f2;
+  color: #013c28;
 }
 
 .faculty-list .fac-edit-button,

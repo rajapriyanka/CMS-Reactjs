@@ -172,7 +172,7 @@ const StudentAttendanceData = () => {
               <div className="stat-card">
                 <div className="stat-icon avg-icon">%</div>
                 <div className="stat-content">
-                  <h3>Average Attendance</h3>
+                  <h3>Cumulative Attendance</h3>
                   <p className="stat-value">{courseStats.average.toFixed(2)}%</p>
                 </div>
               </div>

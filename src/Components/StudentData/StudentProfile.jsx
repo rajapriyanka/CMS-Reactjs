@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { useStudent } from "../../Context/StudentContext"
- // Reusing the same CSS
- import "./StudentProfile.css"
+// Reusing the same CSS
+import "./StudentProfile.css"
 import StudentNavbar from "../Land/StudentNavbar"
-import StudentService from "../../Service/StudentService"
 const StudentProfile = () => {
   const { studentInfo, setStudentInfo } = useStudent()
   const [isLoading, setIsLoading] = useState(true)
@@ -18,6 +17,7 @@ const StudentProfile = () => {
   const [batchName, setBatchName] = useState("")
   const [dno, setDno] = useState("")
   const [phone, setPhone] = useState("")
+  const [section, setSection] = useState("")
 
   // Password change states
   const [showPasswordSection, setShowPasswordSection] = useState(false)
@@ -75,6 +75,7 @@ const StudentProfile = () => {
         setEmail(response.data.email)
         setDepartment(response.data.department)
         setBatchName(response.data.batchName)
+        setSection(response.data.section)
         setDno(response.data.dno)
         setPhone(response.data.mobileNumber)
       }
@@ -164,6 +165,7 @@ const StudentProfile = () => {
           name: fullName,
           department: department,
           batchName: batchName,
+          section: section,
           dno: dno,
           mobileNumber: phone,
         },
@@ -182,6 +184,7 @@ const StudentProfile = () => {
         email,
         department,
         batchName,
+        section,
         dno,
         mobileNumber: phone,
       }
@@ -350,6 +353,16 @@ const StudentProfile = () => {
                       disabled={!isEditable}
                     />
                     {!batchName && isEditable && <p className="validation-error">Batch Name is required</p>}
+                  </div>
+
+                  <div className="input-group">
+                    <label>Section</label>
+                    <input
+                      type="text"
+                      value={section}
+                      onChange={(e) => setSection(e.target.value)}
+                      disabled={!isEditable}
+                    />
                   </div>
 
                   <div className="input-group">

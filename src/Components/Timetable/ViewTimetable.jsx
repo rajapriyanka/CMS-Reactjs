@@ -212,7 +212,7 @@ const ViewTimetable = () => {
             <div className="form-group">
               <label>Academic Year:</label>
               <select value={academicYear} onChange={(e) => setAcademicYear(e.target.value)} className="form-control">
-                <option value="2022-2023">2022-2023</option>
+                <option value="2022-2023">2024-2025</option>
                 <option value="2023-2024">2023-2024</option>
                 <option value="2024-2025">2024-2025</option>
               </select>
@@ -269,7 +269,7 @@ const ViewTimetable = () => {
                       return (
                         <td
                           key={period}
-                          className={entry?.courseType === "ACADEMIC" ? "theory-cell" : entry ? "lab-cell" : ""}
+                          className={entry?.courseType === "ACADEMIC" ? "theory-cell" : entry ? "lab-cell" : "" }
                         >
                           {entry ? (
                             <div className="cell-content">

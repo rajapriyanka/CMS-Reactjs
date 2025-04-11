@@ -9,7 +9,7 @@ const StudentForm = ({ formData, errors, handleInputChange, handleSubmit, handle
     "Electrical and Electronics Engineering",
     "Mechanical Engineering",
     "Civil Engineering",
-    "H&S",
+   "Information Technology"
   ]
 
   return (
@@ -93,6 +93,18 @@ const StudentForm = ({ formData, errors, handleInputChange, handleSubmit, handle
           />
           {errors.batchName && <p className="error-text">{errors.batchName}</p>}
         </div>
+        <div className="form-group">
+          <label htmlFor="section">Section (Optional)</label>
+          <input
+            type="text"
+            id="section"
+            name="section"
+            value={formData.section || ""}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+          {errors.section && <p className="error-text">{errors.section}</p>}
+        </div>
         <div className="form-actions">
           <button type="button" className="cancel-button" onClick={handleCancel}>
             Cancel
@@ -116,4 +128,3 @@ StudentForm.propTypes = {
 }
 
 export default StudentForm
-

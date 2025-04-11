@@ -7,6 +7,11 @@ const FacultyNavbar = () => {
     <nav className="fac-navbar">
       <div className="fac-logo">DAYOFF DASHBOARD</div>
       <ul className="fac-nav-links">
+      <li>
+          <NavLink to="/faculty-dashboard" activeClassName="active">
+            Dashboard
+          </NavLink>
+        </li>
         <li>
           <NavLink to="/fac-course-data" activeClassName="active">
             Courses

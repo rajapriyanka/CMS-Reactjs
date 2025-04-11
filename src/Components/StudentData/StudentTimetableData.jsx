@@ -85,10 +85,10 @@ const StudentTimetableData = () => {
   }
 
   return (
-    <div className="view-timetable-page">
+    <div className="stud-view-timetable-page">
       <StudentNavbar />
-      <div className="view-timetable-container">
-        <div className="view-timetable-sidebar">
+      <div className="stud-view-timetable-container">
+        <div className="stud-view-timetable-sidebar">
           
           <div className="card">
             <button className="view-button" onClick={() => handleNavigation("/view-timetable")}>
@@ -97,11 +97,11 @@ const StudentTimetableData = () => {
           </div>
         </div>
 
-        <div className="view-timetable-main-content">
+        <div className="stud-view-timetable-main-content">
           <h2>View Batch Timetable</h2>
           {message.text && <div className={`message ${message.type}`}>{message.text}</div>}
 
-          <div className="view-timetable-form">
+          <div className="stud-view-timetable-form">
             {/* Batch Selection */}
             <div className="form-group">
               <label>Select Batch:</label>

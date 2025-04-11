@@ -2,6 +2,10 @@
     display: flex;
     flex-direction: column;
     height: 95vh;
+    background-image: url("../../assets/stud-bg5.jpg");
+    background-size: cover; /* scale image to cover the element */
+    background-position: center; /* center the image */
+    background-repeat: no-repeat;
   }
   
   .fac-profile-container {

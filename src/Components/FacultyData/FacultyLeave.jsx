@@ -14,7 +14,7 @@ const FacultyLeave = () => {
   const [pendingApprovals, setPendingApprovals] = useState([])
   const [currentFacultyId, setCurrentFacultyId] = useState(null)
   const [formData, setFormData] = useState({
-    approverId: "",
+    approverId: "", // This is now optional
     subject: "",
     reason: "",
     fromDate: "",
@@ -23,10 +23,21 @@ const FacultyLeave = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [useAutoApprover, setUseAutoApprover] = useState(true) // New state for auto-approver toggle
   const navigate = useNavigate()
+  const [isApprover, setIsApprover] = useState(false)
 
   // Define the base URL for API calls
   const BASE_URL = "http://localhost:8080" // Update this to match your backend URL
+
+  const DEPARTMENT_APPROVER_EMAILS = {
+    "Computer Science and Engineering": "kanmanik135@gmail.com",
+    "Electrical Engineering": "ee.hod@university.edu",
+    "Mechanical Engineering": "me.hod@university.edu",
+    "Civil Engineering": "ce.hod@university.edu",
+    "Electronics and Communication": "ece.hod@university.edu",
+    "Information Technology": "it.hod@university.edu",
+  }
 
   useEffect(() => {
     // Get current faculty ID from localStorage or context
@@ -51,6 +62,17 @@ const FacultyLeave = () => {
         const response = await axios.get(`${BASE_URL}/api/faculty`)
         console.log("Faculty list response:", response.data)
         setFacultyList(response.data.filter((faculty) => faculty.id !== facultyId))
+
+        // Check if current faculty is a department approver
+        const currentFaculty = response.data.find((faculty) => faculty.id === Number.parseInt(facultyId))
+        if (currentFaculty) {
+          const departmentApprovers = Object.values(DEPARTMENT_APPROVER_EMAILS || {})
+          const isApprover = currentFaculty.email && departmentApprovers.includes(currentFaculty.email)
+          if (isApprover) {
+            setIsApprover(true)
+          }
+        }
+
         setError("")
       } catch (err) {
         console.error("Error fetching faculty list:", err)
@@ -176,23 +198,64 @@ const FacultyLeave = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData({
+
+    // Create a new form data object with the updated field
+    const updatedFormData = {
       ...formData,
       [name]: value,
-    })
+    }
+
+    // If changing dates, validate the range
+    if (name === "fromDate" || name === "toDate") {
+      const fromDate = name === "fromDate" ? value : formData.fromDate
+      const toDate = name === "toDate" ? value : formData.toDate
+
+      if (fromDate && toDate && !validateDateRange(fromDate, toDate)) {
+        setError("Leave duration cannot exceed 15 days Ask in person")
+      } else {
+        setError("")
+      }
+    }
+
+    setFormData(updatedFormData)
+  }
+
+  const validateDateRange = (fromDate, toDate) => {
+    if (!fromDate || !toDate) return true
+
+    const start = new Date(fromDate)
+    const end = new Date(toDate)
+    const diffTime = Math.abs(end - start)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1 // +1 to include both start and end dates
+
+    return diffDays <= 15
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // Validate date range before submission
+    if (!validateDateRange(formData.fromDate, formData.toDate)) {
+      setError("Leave duration cannot exceed 15 days")
+      return
+    }
+
     setLoading(true)
     setError("")
     setSuccess("")
 
     try {
       console.log("Submitting leave request for faculty ID:", currentFacultyId)
-      console.log("Form data:", formData)
 
-      const response = await axios.post(`${BASE_URL}/api/leave/request/${currentFacultyId}`, formData)
+      // If using auto-approver, set approverId to empty string or null
+      const requestData = {
+        ...formData,
+        approverId: useAutoApprover ? "" : formData.approverId,
+      }
+
+      console.log("Form data:", requestData)
+
+      const response = await axios.post(`${BASE_URL}/api/leave/request/${currentFacultyId}`, requestData)
       console.log("Leave request response:", response.data)
 
       setSuccess("Leave request submitted successfully!")
@@ -316,27 +379,53 @@ const FacultyLeave = () => {
             <div className="leave-request-form">
               <h2>Submit Leave Request</h2>
               <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="approverId">Send Request To:</label>
-                  <select
-                    id="approverId"
-                    name="approverId"
-                    value={formData.approverId}
-                    onChange={handleInputChange}
-                    required
-                    disabled={loading || facultyList.length === 0}
-                  >
-                    <option value="">Select Faculty</option>
-                    {facultyList.map((faculty) => (
-                      <option key={faculty.id} value={faculty.id}>
-                        {faculty.name} ({faculty.email})
-                      </option>
-                    ))}
-                  </select>
-                  {facultyList.length === 0 && !loading && !error && (
-                    <p className="help-text">No faculty members available to send requests to.</p>
+                {/* Auto-approver toggle */}
+                <div className="form-group auto-approver-toggle">
+                  <label className="toggle-container">
+                    <input
+                      type="checkbox"
+                      checked={useAutoApprover}
+                      onChange={() => setUseAutoApprover(!useAutoApprover)}
+                    />
+                    <span className="toggle-label">Automatically send to department approver</span>
+                  </label>
+                  {useAutoApprover && !isApprover && (
+                    <p className="help-text">
+                      Your request will be sent to the designated approver for your department.
+                    </p>
+                  )}
+                  {useAutoApprover && isApprover && (
+                    <p className="help-text">
+                      Since you are a department approver, your request will be sent to an alternative approver
+                      automatically.
+                    </p>
                   )}
                 </div>
+
+                {/* Manual approver selection - only shown when auto-approver is disabled */}
+                {!useAutoApprover && (
+                  <div className="form-group">
+                    <label htmlFor="approverId">Send Request To:</label>
+                    <select
+                      id="approverId"
+                      name="approverId"
+                      value={formData.approverId}
+                      onChange={handleInputChange}
+                      required={!useAutoApprover}
+                      disabled={loading || facultyList.length === 0}
+                    >
+                      <option value="">Select Faculty</option>
+                      {facultyList.map((faculty) => (
+                        <option key={faculty.id} value={faculty.id}>
+                          {faculty.name} ({faculty.email})
+                        </option>
+                      ))}
+                    </select>
+                    {facultyList.length === 0 && !loading && !error && (
+                      <p className="help-text">No faculty members available to send requests to.</p>
+                    )}
+                  </div>
+                )}
 
                 <div className="form-group">
                   <label htmlFor="subject">Subject:</label>
@@ -395,16 +484,21 @@ const FacultyLeave = () => {
                       required
                       disabled={loading}
                       min={formData.fromDate || new Date().toISOString().split("T")[0]}
-                      className={formData.toDate && formData.toDate < formData.fromDate ? "input-error" : ""}
+                      className={
+                        (formData.toDate && formData.toDate < formData.fromDate) ||
+                        (formData.fromDate && formData.toDate && !validateDateRange(formData.fromDate, formData.toDate))
+                          ? "input-error"
+                          : ""
+                      }
                     />
-                    <small className="form-text">Must be on or after From Date</small>
+                    <small className="form-text">Must be on or after From Date and within 15 days of From Date</small>
                   </div>
                 </div>
 
                 <button
                   type="submit"
                   className="faculty-leave-submit-button"
-                  disabled={loading || facultyList.length === 0}
+                  disabled={loading || (!useAutoApprover && facultyList.length === 0)}
                 >
                   {loading ? "Submitting..." : "Submit Leave Request"}
                 </button>
@@ -437,7 +531,7 @@ const FacultyLeave = () => {
                       {leaveHistory.map((leave) => (
                         <tr key={leave.id}>
                           <td>{leave.subject}</td>
-                          <td>{leave.approverName}</td>
+                          <td>{leave.approverName || "Unassigned"}</td>
                           <td>{formatDate(leave.fromDate)}</td>
                           <td>{formatDate(leave.toDate)}</td>
                           <td>{formatDate(leave.requestedAt)}</td>
@@ -513,4 +607,3 @@ const FacultyLeave = () => {
 }
 
 export default FacultyLeave
-

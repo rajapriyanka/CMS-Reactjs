@@ -166,18 +166,18 @@ const CourseData = () => {
       newErrors.code = "Code should only contain alphanumeric characters"
     }
 
-    if (!formData.contactPeriods && formData.contactPeriods !== 0) {
-      newErrors.contactPeriods = "Contact Periods is required";
-    } else if (formData.contactPeriods < 1 || formData.contactPeriods > 9) {
-      newErrors.contactPeriods = "Contact Periods must be between 1 and 9";
+    if (!formData.contactPeriods.trim()) {
+      newErrors.contactPeriods = "Contact Periods is required"
+    } else if (!/^[1-9]$/.test(formData.contactPeriods)) {
+      newErrors.contactPeriods = "Contact Periods must be a number between 1 and 9"
     }
-    
-    const semesterNo = String(formData.semesterNo).trim();
-    if (!semesterNo) {
-      newErrors.semesterNo = "Semester Number is required";
-    } else if (!semesters.includes(semesterNo)) {
-      newErrors.semesterNo = "Invalid Semester Number";
+
+    if (!formData.semesterNo.trim()) {
+      newErrors.semesterNo = "Semester Number is required"
+    } else if (!semesters.includes(formData.semesterNo)) {
+      newErrors.semesterNo = "Invalid Semester Number"
     }
+
     if (!formData.department) {
       newErrors.department = "Department is required"
     }

@@ -36,6 +36,7 @@ const FacultyData = () => {
     "Mechanical Engineering",
     "Civil Engineering",
     "Aeronautical Engineering",
+    "Higher and Studies",
   ]
 
   const designations = ["Professor", "Assistant Professor", "Associate Professor"]
@@ -335,6 +336,7 @@ const FacultyData = () => {
         "Mechanical Engineering",
         "Civil Engineering",
         "Aeronautical Engineering",
+        "Higher and Studies"
       ];
       if (!departments.includes(row.Department)) {
         errors.push(`Row ${rowNum}: Invalid Department`);

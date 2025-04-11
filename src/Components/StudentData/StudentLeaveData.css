@@ -1,165 +1,243 @@
 .stud-leave-page {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  
-  .stud-leave-container {
-    display: flex;
-    flex: 1;
-  }
-  
-  /* Sidebar */
-  .stud-leave-sidebar {
-    background-color: #013c28;
-    color: white;
-    width: 20%;
-    padding: 20px;
-    box-sizing: border-box;
-    box-shadow: 0px 4px 10px #013c28;
-    height: 635px;
-  }
-  
-  .stud-leave-sidebar h2 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
-  
-  .stud-leave-sidebar-btns button {
-    background-color: white;
-    color: #013c28;
-    padding: 20px 30px 20px 30px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-    font-weight: bold;
-    margin-bottom: 10px;
-    width: 100%;
-  }
-  
-  .stud-leave-sidebar-btns button:hover {
-    background-color: #025d1f;
-    color: white;
-    transition: 0.5s;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-image: url("../../assets/stud-bg5.jpg");
+  background-size: cover; /* scale image to cover the element */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat;
+}
 
-  .stud-leave-main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    box-sizing: border-box;
-    align-items: center; /* Center the main content */
-  }
-  
-  .stud-leave-main-content {
-    flex-grow: 1;
-    overflow-y: auto; /* Enables vertical scrollbar */
-    padding: 20px;
-    height: 80vh; /* Full height */
-  }
-  .stud-leave-form {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px #013c28;
-    max-width: 600px;
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  .stud-leave-form h2 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 16px;
-    color: #013c28;
-  }
+.stud-leave-container {
+  display: flex;
+  flex: 1;
+}
 
-  .stud-leave-form .form-group {
-    margin-bottom: 16px;
-  }
-  
-  .student-leave-form .form-row {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .stud-leave-form .form-row .form-group {
-    flex: 1;
-  }
+/* Sidebar */
+.stud-leave-sidebar {
+  background-color: #013c28;
+  color: white;
+  width: 20%;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 10px #013c28;
+  height: 635px;
+}
 
-  .stud-leave-form label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #013c28;
-  }
-  
-  .stud-leave-form input {
-    width: 95%;
-    padding: 10px;
-    border: 1px solid #013c28;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
+.stud-leave-sidebar h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
 
-  .stud-leave-form select{
-    width: 90%;
-      padding: 10px;
-      border: 1px solid #013c28;
-      border-radius: 5px;
-      font-size: 1rem;
-   }
-   .stud-leave-form textarea{
-    width: 95%;
-      padding: 10px;
-      border: 1px solid #013c28;
-      border-radius: 5px;
-      font-size: 1rem;
-   }
-    .stud-leave-form textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
+.stud-leave-sidebar-btns button {
+  background-color: white;
+  color: #013c28;
+  padding: 20px 30px 20px 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: bold;
+  margin-bottom: 10px;
+  width: 100%;
+}
 
-    .stud-leave-submit-btn button {
-        background-color: #013c28;
-        color: white;
-        padding: 10px 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1rem;
-        margin-top: 10px;
-        margin-left: 200px;
-      }
-      
-      .stud-leave-submit-btn button:hover {
-        background-color: #025d1f;
-      }
+.stud-leave-sidebar-btns button:hover {
+  background-color: #025d1f;
+  color: white;
+  transition: 0.5s;
+}
 
-      .stud-leave-table-container {
-        overflow-x: auto;
-      }
-      
-      .stud-leave-table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      
-      .stud-leave-table th,
-      .stud-leave-table td {
-        padding: 0.75rem;
-        text-align: left;
-        border: 1px solid #ddd;
-      }
-      
-      .stud-leave-table th {
-        background-color: #013c28;
-        font-weight: 600;
-        color: white;
-      }
+.stud-leave-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  align-items: center; /* Center the main content */
+}
+
+.stud-leave-main-content {
+  flex-grow: 1;
+  overflow-y: auto; /* Enables vertical scrollbar */
+  padding: 20px;
+  height: 80vh; /* Full height */
+}
+
+/* Form container */
+.stud-leave-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px #013c28;
+  max-width: 600px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* History container - increased width */
+.stud-leave-history-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px #013c28;
+  width: 95%; /* Increased from previous width */
+  margin-bottom: 20px;
+}
+
+.stud-leave-form h2,
+.stud-leave-history-container h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #013c28;
+}
+
+.stud-leave-form .form-group {
+  margin-bottom: 16px;
+}
+
+.student-leave-form .form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.stud-leave-form .form-row .form-group {
+  flex: 1;
+}
+
+.stud-leave-form label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #013c28;
+}
+
+.stud-leave-form input {
+  width: 95%;
+  padding: 10px;
+  border: 1px solid #013c28;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.stud-leave-form select {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #013c28;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+.stud-leave-form textarea {
+  width: 95%;
+  padding: 10px;
+  border: 1px solid #013c28;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+.stud-leave-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.stud-leave-submit-btn button {
+  background-color: #013c28;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+  margin-left: 200px;
+}
+
+.stud-leave-submit-btn button:hover {
+  background-color: #025d1f;
+}
+
+/* Table container - make it take full width */
+.stud-leave-table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* Table styling - increased width */
+.stud-leave-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Fixed layout for better control */
+}
+
+.stud-leave-table th,
+.stud-leave-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid #ddd;
+  word-wrap: break-word; /* Allow text to wrap */
+}
+
+/* Column widths */
+.stud-leave-table th:nth-child(1),
+.stud-leave-table td:nth-child(1) {
+  width: 15%;
+} /* Subject */
+.stud-leave-table th:nth-child(2),
+.stud-leave-table td:nth-child(2) {
+  width: 15%;
+} /* Faculty */
+.stud-leave-table th:nth-child(3),
+.stud-leave-table td:nth-child(3) {
+  width: 12%;
+} /* From */
+.stud-leave-table th:nth-child(4),
+.stud-leave-table td:nth-child(4) {
+  width: 12%;
+} /* To */
+.stud-leave-table th:nth-child(5),
+.stud-leave-table td:nth-child(5) {
+  width: 8%;
+} /* Days */
+.stud-leave-table th:nth-child(6),
+.stud-leave-table td:nth-child(6) {
+  width: 12%;
+} /* Status */
+.stud-leave-table th:nth-child(7),
+.stud-leave-table td:nth-child(7) {
+  width: 26%;
+} /* Comments */
+
+.stud-leave-table th {
+  background-color: #013c28;
+  font-weight: 600;
+  color: white;
+}
+
+/* Added styles for error message */
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border-left: 4px solid #c62828;
+}
+
+/* Style for input fields with errors */
+.stud-leave-form input.border-red-500 {
+  border-color: #ef5350;
+}
+
+.stud-leave-form input.bg-red-50 {
+  background-color: #ffebee;
+}
+
+/* Form row styling */
+.form-row {
+  display: flex;
+  gap: 1rem;
+}

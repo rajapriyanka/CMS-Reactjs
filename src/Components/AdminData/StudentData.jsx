@@ -15,6 +15,7 @@ const StudentData = () => {
     department: "",
     batchName: "",
     mobileNumber: "",
+    section: "", // Added section field with empty default
   })
   const [isEditing, setIsEditing] = useState(false)
   const [editingId, setEditingId] = useState(null)
@@ -86,6 +87,11 @@ const StudentData = () => {
         }
     } else if (name === "batchName") {
         // Only allow alphabets and spaces for batchName field
+        if (value === "" || /^[A-Za-z\s]*$/.test(value)) {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
+    } else if (name === "section") {
+        // Only allow alphabets and spaces for section field
         if (value === "" || /^[A-Za-z\s]*$/.test(value)) {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
@@ -168,6 +174,12 @@ const StudentData = () => {
       valid = false
     }
 
+    // Section validation - only alphabets (optional field)
+    if (formData.section.trim() && !/^[A-Za-z\s]+$/.test(formData.section)) {
+      newErrors.section = "Section should contain only alphabets."
+      valid = false
+    }
+
     setErrors(newErrors)
     return valid
   }
@@ -215,6 +227,7 @@ const StudentData = () => {
       department: student.department || "", // Log if department is correct here
       batchName: student.batchName || "",
       mobileNumber: student.mobileNumber || "",
+      section: student.section || "", // Added section field
     })
     console.log(formData.department) // Check if department value is set properly
     setActiveTab("register")
@@ -241,6 +254,7 @@ const StudentData = () => {
       department: "",
       batchName: "",
       mobileNumber: "",
+      section: "", // Reset section field
     })
     setIsEditing(false)
     setEditingId(null)
@@ -376,6 +390,11 @@ const StudentData = () => {
       if (!row.Dno || !/^\d{4}$/.test(row.Dno)) {
         errors.push(`Row ${rowNum}: Invalid D.No (Must be exactly 4 numeric digits)`);
       }
+      
+      // Section is optional, but if provided, validate it contains only alphabets
+      if (row.Section && !/^[A-Za-z\s]+$/.test(row.Section)) {
+        errors.push(`Row ${rowNum}: Invalid Section (Only alphabets allowed)`);
+      }
     });
   
     return errors;
@@ -496,6 +515,14 @@ const StudentData = () => {
                   required
                 />
                 {errors.batchName && <span className="error-message">{errors.batchName}</span>}
+                <input
+                  type="text"
+                  name="section"
+                  value={formData.section}
+                  onChange={handleInputChange}
+                  placeholder="Section (Optional)"
+                />
+                {errors.section && <span className="error-message">{errors.section}</span>}
                 <div className="form-buttons">
                   <button type="submit" className="register-submit-button">
                     {isEditing ? "Update" : "Register"}
@@ -564,6 +591,7 @@ const StudentData = () => {
                     <th>D.No</th>
                     <th>Department</th>
                     <th>Batch Name</th>
+                    <th>Section</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -576,8 +604,9 @@ const StudentData = () => {
                       <td>{student.dno || "N/A"}</td>
                       <td>{student.department || "N/A"}</td>
                       <td>{student.batchName || "N/A"}</td>
+                      <td>{student.section || "N/A"}</td>
                       <td>
-                        <div className="stu-list-action-btns">
+                      <div className="stud-list-action-buttons">
                         <button onClick={() => handleEdit(student)} className="stud-edit-button">
                           Edit
                         </button>
@@ -599,4 +628,3 @@ const StudentData = () => {
 }
 
 export default StudentData
-

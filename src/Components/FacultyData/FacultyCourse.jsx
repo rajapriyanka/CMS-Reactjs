@@ -231,7 +231,7 @@ const FacultyCourse = () => {
           )}
 
           {showAssignedCourses && (
-            <div className="card assigned-courses">
+            <div className="card-assigned-courses">
               <h3>Assigned Courses</h3>
               {loading && <p>Loading assigned courses...</p>}
               {error && <p className="error-message">{error}</p>}

@@ -2,13 +2,15 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden; /* Prevent outer scrollbar */
+  background-image: url("../../assets/fac-bg3.png");
+  background-size: cover;     /* scale image to cover the element */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat;
 }
 
 .fac-subs-container {
   display: flex;
   flex: 1;
-  overflow: hidden; /* Prevent outer scrollbar */
 }
 
 .fac-subs-sidebar {
@@ -18,8 +20,7 @@
   padding: 20px;
   box-sizing: border-box;
   box-shadow: 0px 4px 10px #013c28;
-  height: 100%; /* Full height */
-  overflow-y: auto; /* Allow sidebar to scroll if needed */
+  height:100%;
 }
 
 .fac-subs-main-content h2 {
@@ -72,8 +73,13 @@
   padding: 24px;
   box-sizing: border-box;
   align-items: center; /* Center the main content */
-  overflow-y: auto; /* Keep inner scrollbar */
-  height: 100%; /* Full height */
+}
+
+.fac-subs-main-content {
+  flex-grow: 1;
+  overflow-y: auto; /* Enables vertical scrollbar */
+  padding: 24px;
+  height: 80vh; /* Full height */
 }
 
 .request-form {
@@ -81,8 +87,8 @@
   padding: 24px;
   border-radius: 8px;
   box-shadow: 0 4px 6px #013c28;
-  width: 100%;
   max-width: 90%;
+  width: 100%;
   margin-bottom: 24px;
 }
 
@@ -308,7 +314,7 @@ table tr:hover {
 
 .action-buttons {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   margin-top: 0;
 }
 
@@ -316,7 +322,7 @@ table tr:hover {
   background-color: #4caf50;
   color: white;
   min-width: 100px;
-  padding: 10px 16px;
+  padding: 8px 10px;
   margin-left: 0;
   margin-right: 10px;
 }
@@ -329,7 +335,7 @@ table tr:hover {
   background-color: #f44336;
   color: white;
   min-width: 100px;
-  padding: 10px 16px;
+  padding: 8px 10px;
   margin-left: 0;
   display: inline-block;
 }
@@ -430,13 +436,14 @@ table tr:hover {
   color: white;
   font-weight: 600;
   text-align: left;
-  border: none;
+  border:1px solid #013c28;
 }
 
 .requests-list table td {
-  padding: 14px 18px;
+  padding: 12px 16px;
   border: none;
   border-bottom: 1px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
 }
 
 .requests-list table tr:last-child td {
@@ -453,7 +460,7 @@ table tr:hover {
 
 /* Fix for action buttons in the table */
 .requests-list table td:last-child {
-  min-width: 220px;
+  min-width: 200px;
 }
 
 /* Make sure both buttons appear side by side */
@@ -462,33 +469,5 @@ table tr:hover {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
-}
-
-/* Table container with horizontal scroll if needed */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}
-
-/* Styles for requester name in received requests */
-.requests-list table td:first-child {
-  font-size: 0.85rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
-}
-
-/* Adjust font size for all cells in received requests table for better fit */
-.requests-list table td {
-  font-size: 0.9rem;
-}
-
-/* Make the reason column handle overflow better */
-.requests-list table td:nth-child(6) {
-  max-width: 150px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  gap: 5px;
 }

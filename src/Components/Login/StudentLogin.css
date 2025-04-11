@@ -6,14 +6,15 @@
     align-items: center;
     height: 100vh; /* Full viewport height */
     width: 100vw; 
-    /* background: url('../Assets/Background4.jpg') repeat-x;
-    background-size: cover; */
-    background: white;
+    background-image: url("../../assets/land-bg4.avif");
+    background-size: cover;     /* scale image to cover the element */
+    background-position: center; /* center the image */
+    background-repeat: no-repeat;
     
   }
   
   .student-login-container {
-    background: rgba(255, 255, 255, 0.388);
+    background: rgba(255, 255, 255, 0.704);
   
     padding: 20px;
     border-radius: 8px;

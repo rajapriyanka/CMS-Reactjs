@@ -1,13 +1,20 @@
 .batch-data-page {
   display: flex;
   flex-direction: column;
-  height: 95vh;
+  height: 100vh;
+  background-image: url("../../assets/admin-bg3.webp");
+  background-size: cover;     /* scale image to cover the element */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat;
+  
 }
 
 .batch-data-container {
   display: flex;
   flex-direction: row;
   height: 95vh;
+  align-items: center;
+  
 }
 
 .batch-sidebar {
@@ -17,7 +24,7 @@
   padding: 20px;
   box-sizing: border-box;
   box-shadow: 0px 4px 10px #013c28;
-  height: 635px;
+  height: 100%;
 }
 
 .batch-sidebar h2 {
@@ -102,8 +109,9 @@
   color: white;
 }
 
-.batch-list tr:nth-child(even) {
+.batch-list tr {
   background-color: #f2f2f2;
+  color: #013c28;
 }
 
 .batch-list .batch-edit-button,
