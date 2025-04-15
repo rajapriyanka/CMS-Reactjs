@@ -151,13 +151,9 @@ const TimetableGeneration = () => {
       </div>
 
       <div className="timetable-info">
-        <h3>Timetable Generation Rules:</h3>
+       
         <ul>
-          <li>Each faculty will have at least one 1st, 2nd, and last period in a week</li>
-          <li>Lab periods will not be scheduled in the 1st period</li>
-          <li>Lab periods will be scheduled continuously</li>
-          <li>The system will check for conflicts with other faculty schedules</li>
-          <li>The timetable will follow the standard 8-period day structure</li>
+         
         </ul>
       </div>
       </div>
