@@ -5,7 +5,7 @@ import "./FacultyNavbar.css";
 const FacultyNavbar = () => {
   return (
     <nav className="fac-navbar">
-      <div className="fac-logo">DAYOFF DASHBOARD</div>
+      <div className="fac-logo">UNIHUB</div>
       <ul className="fac-nav-links">
       <li>
           <NavLink to="/faculty-dashboard" activeClassName="active">

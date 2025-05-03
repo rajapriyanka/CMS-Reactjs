@@ -6,7 +6,7 @@ const MainSection = () => {
   return (
     <div className="main-section">
       <div className="main-container">
-        <h2>DAYOFF DASHBOARD</h2>
+        <h2>UNIHUB</h2>
         
         
           <ul className="buttons">

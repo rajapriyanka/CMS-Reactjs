@@ -9,7 +9,7 @@ import FacultyService from "../../Service/FacultyService"
 
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { format } from "date-fns"
+import { format, addMonths, isAfter, getDay } from "date-fns"
 import "./FacultySubstitute.css"
 import FacultyNavbar from "../Land/FacultyNavbar"
 
@@ -35,6 +35,17 @@ const FacultySubstitute = () => {
     batchesLoaded: false,
     error: null,
   })
+
+  // Map day names to day numbers (0 = Sunday, 1 = Monday, etc.)
+  const dayToNumber = {
+    SUNDAY: 0,
+    MONDAY: 1,
+    TUESDAY: 2,
+    WEDNESDAY: 3,
+    THURSDAY: 4,
+    FRIDAY: 5,
+    SATURDAY: 6,
+  }
 
   // Debug effect to log state changes
   useEffect(() => {
@@ -199,20 +210,76 @@ const FacultySubstitute = () => {
     setSelectedEntry(entry)
     setSelectedSubstitute("")
     setAvailableFaculty([])
+
+    // Reset selected date when entry changes
+    setSelectedDate("")
+  }
+
+  // Function to get valid dates for the selected entry
+  const getValidDatesForEntry = (entry) => {
+    if (!entry || !entry.day) return []
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Reset time to start of day
+
+    const twoMonthsFromToday = addMonths(today, 2)
+    const dayNumber = dayToNumber[entry.day.toUpperCase()]
+
+    if (dayNumber === undefined) {
+      console.error("Invalid day in entry:", entry.day)
+      return []
+    }
+
+    const validDates = []
+    const currentDate = new Date(today)
+
+    // Find the next occurrence of the day
+    while (getDay(currentDate) !== dayNumber) {
+      currentDate.setDate(currentDate.getDate() + 1)
+    }
+
+    // Collect all valid dates (same day of week) within the 2-month period
+    while (!isAfter(currentDate, twoMonthsFromToday)) {
+      validDates.push(new Date(currentDate))
+      currentDate.setDate(currentDate.getDate() + 7) // Move to next week
+    }
+
+    return validDates
   }
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value
-    const today = new Date().toISOString().split("T")[0]
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Reset to start of day
+
+    const selectedDateObj = new Date(selectedDate)
+    selectedDateObj.setHours(0, 0, 0, 0) // Reset to start of day
 
     console.log("Selected date:", selectedDate)
 
     // Validate that the selected date is not in the past
-    if (selectedDate < today) {
+    if (selectedDateObj < today) {
       toast.error("Cannot select a date in the past. Please choose today or a future date.")
-      // Reset to today's date or empty string
-      setSelectedDate(today)
+      setSelectedDate("")
       return
+    }
+
+    // Validate that the selected date is not more than 2 months from today
+    const twoMonthsFromToday = addMonths(today, 2)
+    if (selectedDateObj > twoMonthsFromToday) {
+      toast.error("Cannot select a date more than 2 months from today.")
+      setSelectedDate("")
+      return
+    }
+
+    // Validate that the selected date matches the day of the week of the selected class
+    if (selectedEntry && selectedEntry.day) {
+      const dayNumber = dayToNumber[selectedEntry.day.toUpperCase()]
+      if (dayNumber !== undefined && getDay(selectedDateObj) !== dayNumber) {
+        toast.error(`Selected date must be a ${selectedEntry.day} to match the class schedule.`)
+        setSelectedDate("")
+        return
+      }
     }
 
     setSelectedDate(selectedDate)
@@ -329,10 +396,31 @@ const FacultySubstitute = () => {
     }
 
     // Additional validation for date
-    const today = new Date().toISOString().split("T")[0]
-    if (selectedDate < today) {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Reset to start of day
+
+    const selectedDateObj = new Date(selectedDate)
+    selectedDateObj.setHours(0, 0, 0, 0) // Reset to start of day
+
+    if (selectedDateObj < today) {
       toast.error("Cannot request substitution for a past date. Please select today or a future date.")
       return
+    }
+
+    // Validate that the selected date is not more than 2 months from today
+    const twoMonthsFromToday = addMonths(today, 2)
+    if (selectedDateObj > twoMonthsFromToday) {
+      toast.error("Cannot request substitution for a date more than 2 months from today.")
+      return
+    }
+
+    // Validate that the selected date matches the day of the week of the selected class
+    if (selectedEntry && selectedEntry.day) {
+      const dayNumber = dayToNumber[selectedEntry.day.toUpperCase()]
+      if (dayNumber !== undefined && getDay(selectedDateObj) !== dayNumber) {
+        toast.error(`Selected date must be a ${selectedEntry.day} to match the class schedule.`)
+        return
+      }
     }
 
     console.log("Starting handleSubmitRequest")
@@ -482,7 +570,15 @@ const FacultySubstitute = () => {
   // Check if the selected entry has a valid batch ID
   const hasBatchId = selectedEntry ? extractBatchId(selectedEntry) !== null : false
 
-  // Debug panel
+  // Get valid dates for the selected entry
+  const validDates = selectedEntry ? getValidDatesForEntry(selectedEntry) : []
+
+  // Format valid dates for display
+  const validDatesFormatted = validDates.map((date) => date.toISOString().split("T")[0])
+
+  // Calculate max date (2 months from today)
+  const today = new Date()
+  const maxDate = addMonths(today, 2).toISOString().split("T")[0]
 
   return (
     <div className="fac-subs-page">
@@ -531,9 +627,24 @@ const FacultySubstitute = () => {
                     value={selectedDate}
                     onChange={handleDateChange}
                     min={new Date().toISOString().split("T")[0]}
+                    max={maxDate}
                     required
+                    disabled={!selectedEntry}
                   />
-                  <small className="form-text">Please select today or a future date</small>
+                  {selectedEntry && (
+                    <small className="form-text">Please select a {selectedEntry.day} within the next 2 months</small>
+                  )}
+                  {selectedEntry && validDates.length > 0 && (
+                    <div className="valid-dates-info" style={{ marginTop: "10px", fontSize: "14px", color: "#666" }}>
+                      <p>Valid dates for this class:</p>
+                      <ul style={{ marginTop: "5px", paddingLeft: "20px" }}>
+                        {validDates.slice(0, 5).map((date, index) => (
+                          <li key={index}>{format(date, "EEE, MMM d, yyyy")}</li>
+                        ))}
+                        {validDates.length > 5 && <li>...and {validDates.length - 5} more</li>}
+                      </ul>
+                    </div>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -658,6 +769,7 @@ const FacultySubstitute = () => {
                                     padding: "4px 8px",
                                     borderRadius: "4px",
                                     backgroundColor: faculty.handlesBatch ? "#e8f5e9" : "#ffebee",
+                                    color: faculty.handlesBatch ? "#2e7d32" : '#c62828",  : "#ffebee',
                                     color: faculty.handlesBatch ? "#2e7d32" : "#c62828",
                                     fontWeight: "500",
                                     fontSize: "14px",
@@ -862,4 +974,3 @@ const FacultySubstitute = () => {
 }
 
 export default FacultySubstitute
-

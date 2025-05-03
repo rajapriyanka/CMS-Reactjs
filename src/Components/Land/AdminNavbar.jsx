@@ -5,7 +5,7 @@ import "./AdminNavbar.css";
 const Navbar = () => {
   return (
     <nav className="admin-navbar">
-      <div className="admin-logo">DAYOFF DASHBOARD</div>
+      <div className="admin-logo">UNIHUB</div>
       <ul className="admin-nav-links">
       <li>
           <NavLink to="/admin-dashboard" activeClassName="active">

@@ -30,7 +30,7 @@ const CourseData = () => {
   const [message, setMessage] = useState("")
 
   const courseTypes = ["ACADEMIC", "NON_ACADEMIC", "LAB"]
-  const semesters = ["1", "2", "3", "4", "5", "6", "7", "8"]
+  const semesters = [1, 2, 3, 4, 5, 6, 7, 8]
   const departments = [
     "Computer Science and Engineering",
     "Electronics and Communication Engineering",
@@ -121,19 +121,23 @@ const CourseData = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-
+  
     if (name === "title") {
       if (!/^[A-Za-z\s]*$/.test(value)) {
         return
       }
+      setFormData((prev) => ({ ...prev, [name]: value }))
+      return
     }
-
+  
     if (name === "code") {
-      if (!/^[A-Za-z0-9]*$/.test(value)) {
-        return
+      // Only allow alphanumeric values, must start with a letter, and 5-7 characters
+      if (/^[A-Za-z][A-Za-z0-9]{0,6}$/.test(value) || value === "") {
+        setFormData((prev) => ({ ...prev, [name]: value }))
       }
+      return
     }
-
+  
     if (name === "contactPeriods") {
       if (!/^[1-9]?$/.test(value)) {
         setErrors((prevErrors) => ({
@@ -143,14 +147,18 @@ const CourseData = () => {
         return
       }
       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }))
+      setFormData((prev) => ({ ...prev, [name]: value }))
+      return
     }
-
+  
+    // Default update for other fields
     setFormData((prevState) => ({ ...prevState, [name]: value }))
   }
+  
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.title.trim()) {
+    if (!formData.title || formData.title.trim() === "") {
       newErrors.title = "Title is required"
     } else if (formData.title.trim().length < 5) {
       newErrors.title = "Title should have at least 5 characters"
@@ -158,25 +166,28 @@ const CourseData = () => {
       newErrors.title = "Title should only contain letters and spaces"
     }
 
-    if (!formData.code.trim()) {
+    if (!formData.code || formData.code.trim() === "") {
       newErrors.code = "Code is required"
     } else if (formData.code.trim().length < 5) {
       newErrors.code = "Code should have at least 5 characters"
-    } else if (/[^A-Za-z0-9]/.test(formData.code)) {
-      newErrors.code = "Code should only contain alphanumeric characters"
+    } else if (formData.code.trim().length > 7) {
+      newErrors.code = "Code should have at most 7 characters"
+    } else if (!/^[A-Za-z][A-Za-z0-9]*$/.test(formData.code)) {
+      newErrors.code = "Code should start with a letter and contain only alphanumeric characters"
     }
 
-    if (!formData.contactPeriods.trim()) {
+    if (!formData.contactPeriods || formData.contactPeriods === "") {
       newErrors.contactPeriods = "Contact Periods is required"
     } else if (!/^[1-9]$/.test(formData.contactPeriods)) {
       newErrors.contactPeriods = "Contact Periods must be a number between 1 and 9"
     }
 
-    if (!formData.semesterNo.trim()) {
+    if (!formData.semesterNo || formData.semesterNo === "") {
       newErrors.semesterNo = "Semester Number is required"
-    } else if (!semesters.includes(formData.semesterNo)) {
+    } else if (!semesters.includes(Number(formData.semesterNo))) {
       newErrors.semesterNo = "Invalid Semester Number"
     }
+    
 
     if (!formData.department) {
       newErrors.department = "Department is required"
@@ -357,9 +368,16 @@ const CourseData = () => {
         errors.push(`Row ${rowNum}: Invalid Title (Only alphabets and spaces, min 5 characters required)`)
       }
 
-      // Validate Code (alphanumeric, min 5 chars)
-      if (!row.Code || !/^[A-Za-z0-9]+$/.test(row.Code) || row.Code.trim().length < 5) {
-        errors.push(`Row ${rowNum}: Invalid Code (Only alphanumeric characters, min 5 characters required)`)
+      // Validate Code (starts with letter, alphanumeric, 5-7 chars)
+      if (
+        !row.Code ||
+        !/^[A-Za-z][A-Za-z0-9]*$/.test(row.Code) ||
+        row.Code.trim().length < 5 ||
+        row.Code.trim().length > 7
+      ) {
+        errors.push(
+          `Row ${rowNum}: Invalid Code (Must start with a letter, contain only alphanumeric characters, and be 5-7 characters long)`,
+        )
       }
 
       // Validate Contact Periods (must be a single digit between 1 and 9)
@@ -675,4 +693,3 @@ const CourseData = () => {
 }
 
 export default CourseData
-

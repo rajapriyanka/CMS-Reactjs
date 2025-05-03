@@ -100,13 +100,14 @@ const FacultyData = () => {
       newErrors.name = "Name should have at least 5 characters."
       valid = false
     }
-    if (!formData.email.trim()) {
+    if (!formData.email.trim()) {    
       newErrors.email = "Email is required.";
       valid = false;
-    } else if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|in|org)$/i.test(formData.email)) {
-      newErrors.email = "Enter a valid email address with '.com', '.in', or '.org' domain.";
+    } else if (!/^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9.-]+\.(com|in|org)$/i.test(formData.email)) {
+      newErrors.email = "Enter a valid email starting with a letter and ending in '.com', '.in', or '.org'.";
       valid = false;
     }
+    
     if (!formData.department || formData.department === "Select Department") {
       newErrors.department = "Please select a valid department."
       valid = false

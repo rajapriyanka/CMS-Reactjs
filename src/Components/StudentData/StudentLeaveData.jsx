@@ -91,6 +91,15 @@ const StudentLeaveData = () => {
     return diffDays <= 15
   }
 
+  // Calculate the date 2 months from today
+  const getTwoMonthsFromToday = () => {
+    const today = new Date()
+    const twoMonthsFromToday = new Date()
+    twoMonthsFromToday.setMonth(today.getMonth() + 2)
+    twoMonthsFromToday.setHours(0, 0, 0, 0) // Reset to start of day
+    return twoMonthsFromToday
+  }
+
   const handleDateChange = (e) => {
     const { name, value } = e.target
 
@@ -100,23 +109,36 @@ const StudentLeaveData = () => {
       [name]: value,
     }
 
-    // For fromDate, validate that it's not in the past
     if (name === "fromDate") {
       const selectedDate = new Date(value)
       const today = new Date()
-      today.setHours(0, 0, 0, 0) // Reset time to start of day for fair comparison
+      today.setHours(0, 0, 0, 0) // Reset to start of day
+      const twoMonthsFromToday = getTwoMonthsFromToday()
 
       if (selectedDate < today) {
         toast.error("From date cannot be in the past")
         return
       }
+
+      if (selectedDate > twoMonthsFromToday) {
+        toast.error("From date cannot be more than 2 months from today")
+        setDateError("From date cannot be more than 2 months from today")
+        return
+      } else {
+        // Only clear the date error if it was related to the 2-month restriction
+        if (dateError === "From date cannot be more than 2 months from today") {
+          setDateError("")
+        }
+      }
     }
 
-    // If changing dates, validate the range
+    // Validate range between fromDate and toDate
     if ((name === "fromDate" || name === "toDate") && updatedFormData.fromDate && updatedFormData.toDate) {
       if (!validateDateRange(updatedFormData.fromDate, updatedFormData.toDate)) {
         setDateError("Leave duration cannot exceed 15 days. Please contact faculty in person for longer leaves.")
-      } else {
+      } else if (
+        dateError === "Leave duration cannot exceed 15 days. Please contact faculty in person for longer leaves."
+      ) {
         setDateError("")
       }
     }
@@ -140,6 +162,16 @@ const StudentLeaveData = () => {
 
     if (!formData.fromDate || !formData.toDate) {
       toast.error("Please select both from and to dates")
+      return
+    }
+
+    // Validate that from date is not more than 2 months from today
+    const selectedFromDate = new Date(formData.fromDate)
+    const twoMonthsFromToday = getTwoMonthsFromToday()
+
+    if (selectedFromDate > twoMonthsFromToday) {
+      setDateError("From date cannot be more than 2 months from today")
+      toast.error("From date cannot be more than 2 months from today")
       return
     }
 
@@ -218,6 +250,9 @@ const StudentLeaveData = () => {
     const date = new Date(dateString)
     return format(date, "PPP") // Format: Jan 1, 2021
   }
+
+  // Calculate max date for from date input (2 months from today)
+  const maxFromDate = getTwoMonthsFromToday().toISOString().split("T")[0]
 
   return (
     <div className="stud-leave-page">
@@ -312,11 +347,15 @@ const StudentLeaveData = () => {
                         value={formData.fromDate || ""}
                         onChange={handleDateChange}
                         min={new Date().toISOString().split("T")[0]} // Set minimum date to today
+                        max={maxFromDate} // Set maximum date to 2 months from today
                         className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          dateError ? "border-red-500 bg-red-50" : ""
+                          dateError && dateError.includes("From date") ? "border-red-500 bg-red-50" : ""
                         }`}
                         required
                       />
+                      <small className="text-xs text-gray-500">
+                        Must be between today and {format(new Date(maxFromDate), "MMM dd, yyyy")}
+                      </small>
                     </div>
 
                     <div className="form-group">
@@ -331,7 +370,7 @@ const StudentLeaveData = () => {
                         onChange={handleDateChange}
                         min={formData.fromDate || ""}
                         className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          dateError ? "border-red-500 bg-red-50" : ""
+                          dateError && dateError.includes("Leave duration") ? "border-red-500 bg-red-50" : ""
                         }`}
                         required
                       />
@@ -345,7 +384,9 @@ const StudentLeaveData = () => {
                   )}
 
                   <div className="form-group">
-                    <p className="text-sm text-gray-600 italic">Note: Leave requests cannot exceed 15 days.</p>
+                    <p className="text-sm text-gray-600 italic">
+                      Note: Leave requests cannot exceed 15 days and must start within the next 2 months.
+                    </p>
                   </div>
                 </div>
 

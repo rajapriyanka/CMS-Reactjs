@@ -247,7 +247,7 @@
 
 .register-form .form-group input,
 .register-form .form-group select {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: 1px solid #013c28;
   border-radius: 5px;

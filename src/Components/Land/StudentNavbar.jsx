@@ -5,7 +5,7 @@ import "./StudentNavbar.css";
 const StudentNavbar = () => {
   return (
     <nav className="student-navbar">
-      <div className="student-logo">DAYOFF DASHBOARD</div>
+      <div className="student-logo">UNIHUB</div>
       <ul className="student-nav-links">
       <li>
           <NavLink to="/student-dashboard" activeClassName="active">

@@ -81,11 +81,15 @@ const StudentData = () => {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
     } else if (name === "dno") {
-        // Only allow numeric values for dno field, max 4 digits
-        if (value === "" || (/^\d*$/.test(value) && value.length <= 4)) {
-            setFormData((prev) => ({ ...prev, [name]: value }));
-        }
-    } else if (name === "batchName") {
+      // Only allow numeric values for dno field, max 4 digits, and first digit should not be 0
+      if (
+        value === "" ||
+        (/^[1-9]\d{0,3}$/.test(value)) // First digit 1-9, followed by up to 3 digits
+      ) {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+    }
+     else if (name === "batchName") {
         // Only allow alphabets and spaces for batchName field
         if (value === "" || /^[A-Za-z\s]*$/.test(value)) {
             setFormData((prev) => ({ ...prev, [name]: value }));
@@ -116,13 +120,12 @@ const StudentData = () => {
       valid = false
     }
 
-    // Email validation with specific domains
-    if (!formData.user.email.trim()) {
-      newErrors.email = "Email is required."
-      valid = false
-    } else if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|in|org)$/i.test(formData.user.email)) {
-      newErrors.email = "Enter a valid email address with @com, @in, or @org domain."
-      valid = false
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required.";
+      valid = false;
+    } else if (!/^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9.-]+\.(com|in|org)$/i.test(formData.email)) {
+      newErrors.email = "Enter a valid email starting with a letter and ending in '.com', '.in', or '.org'.";
+      valid = false;
     }
 
     // Password validation
@@ -150,14 +153,15 @@ const StudentData = () => {
       valid = false
     }
 
-    // D.No validation - exactly 4 numeric digits
-    if (!formData.dno.trim()) {
-      newErrors.dno = "D.No is required."
-      valid = false
-    } else if (!/^\d{4}$/.test(formData.dno)) {
-      newErrors.dno = "D.No must be exactly 4 numeric digits."
-      valid = false
-    }
+  // D.No validation - exactly 4 numeric digits and should not start with 0
+if (!formData.dno.trim()) {
+  newErrors.dno = "D.No is required."
+  valid = false
+} else if (!/^[1-9]\d{3}$/.test(formData.dno)) {
+  newErrors.dno = "D.No must be exactly 4 digits and should not start with 0."
+  valid = false
+}
+
 
     // Department validation
     if (!formData.department.trim()) {

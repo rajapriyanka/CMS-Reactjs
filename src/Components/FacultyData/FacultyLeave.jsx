@@ -205,15 +205,37 @@ const FacultyLeave = () => {
       [name]: value,
     }
 
-    // If changing dates, validate the range
+    // Calculate today and 2 months from today for validation
+    const today = new Date()
+    const twoMonthsFromToday = new Date()
+    twoMonthsFromToday.setMonth(today.getMonth() + 2)
+
+    // If changing fromDate, validate it's not more than 2 months from today
+    if (name === "fromDate") {
+      const selectedFromDate = new Date(value)
+      if (selectedFromDate > twoMonthsFromToday) {
+        setError("From date cannot be more than 2 months from today.")
+        // Still update the form data to show the invalid selection
+      } else {
+        // Only clear error if it was related to date range
+        if (error === "From date cannot be more than 2 months from today.") {
+          setError("")
+        }
+      }
+    }
+
+    // If changing dates, validate the range (15 days max)
     if (name === "fromDate" || name === "toDate") {
       const fromDate = name === "fromDate" ? value : formData.fromDate
       const toDate = name === "toDate" ? value : formData.toDate
 
       if (fromDate && toDate && !validateDateRange(fromDate, toDate)) {
-        setError("Leave duration cannot exceed 15 days Ask in person")
-      } else {
-        setError("")
+        setError("Leave duration cannot exceed 15 days. Ask in person.")
+      } else if (error === "Leave duration cannot exceed 15 days. Ask in person.") {
+        // Only clear error if it was related to date range and not the 2-month validation
+        if (name !== "fromDate" || (name === "fromDate" && new Date(value) <= twoMonthsFromToday)) {
+          setError("")
+        }
       }
     }
 
@@ -237,6 +259,17 @@ const FacultyLeave = () => {
     // Validate date range before submission
     if (!validateDateRange(formData.fromDate, formData.toDate)) {
       setError("Leave duration cannot exceed 15 days")
+      return
+    }
+
+    // Validate from date is not more than 2 months from today
+    const today = new Date()
+    const twoMonthsFromToday = new Date()
+    twoMonthsFromToday.setMonth(today.getMonth() + 2)
+    const selectedFromDate = new Date(formData.fromDate)
+
+    if (selectedFromDate > twoMonthsFromToday) {
+      setError("From date cannot be more than 2 months from today.")
       return
     }
 
@@ -470,7 +503,7 @@ const FacultyLeave = () => {
                           : ""
                       }
                     />
-                    <small className="form-text">Must be today or a future date</small>
+                    <small className="form-text">Must be today or a future date (max 2 months from today)</small>
                   </div>
 
                   <div className="form-group">
