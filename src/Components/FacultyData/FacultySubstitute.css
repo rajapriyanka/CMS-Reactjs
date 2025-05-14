@@ -82,6 +82,10 @@
   height: 80vh; /* Full height */
 }
 
+.fac-subs-main-content h2{
+  color: #013c28;
+  text-shadow: 2px 2px 5px #eeffd8;
+}
 .request-form {
   background-color: white;
   padding: 24px;
@@ -133,7 +137,7 @@
 }
 
 .form-group textarea {
-  min-height: 120px;
+  min-height: 70px;
   resize: vertical;
 }
 

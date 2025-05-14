@@ -133,6 +133,8 @@
   padding: 14px;
   text-align: left;
   border: 1px solid #ddd;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: bolder;
 }
 
 .student-list th {
@@ -141,7 +143,7 @@
 }
 
 .student-list tr {
-  background-color: #f2f2f2;
+  background-color: #f2f2f261;
   color: #013c28;
 }
 
@@ -190,7 +192,7 @@ table .stud-list-action-buttons {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px #013c28;
+  box-shadow: 0 8px 10px #013c28;
   max-width: 600px;
   width: 100%;
   margin-bottom: 20px;

@@ -8,8 +8,12 @@ import "./AttendancePage.css"
 const AttendancePage = () => {
   const [courses, setCourses] = useState([])
   const [batches, setBatches] = useState([])
+  const [departments, setDepartments] = useState([])
+  const [sections, setSections] = useState([])
   const [selectedCourse, setSelectedCourse] = useState("")
   const [selectedBatch, setSelectedBatch] = useState("")
+  const [selectedDepartment, setSelectedDepartment] = useState("")
+  const [selectedSection, setSelectedSection] = useState("")
   const [attendanceRecords, setAttendanceRecords] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -31,8 +35,16 @@ const AttendancePage = () => {
           assignedCourses.some((assigned) => assigned.courseId === course.id),
         )
 
+        // Extract unique departments from batches
+        const uniqueDepartments = [...new Set(batchesData.map((batch) => batch.department))].filter(Boolean)
+
+        // Extract unique sections from batches
+        const uniqueSections = [...new Set(batchesData.map((batch) => batch.section))].filter(Boolean)
+
         setCourses(filteredCourses)
         setBatches(batchesData)
+        setDepartments(uniqueDepartments)
+        setSections(uniqueSections)
       } catch (err) {
         setError("Failed to load data. Please try again.")
         console.error(err)
@@ -44,6 +56,27 @@ const AttendancePage = () => {
     fetchData()
   }, [facultyId])
 
+  // Update sections when department changes
+  useEffect(() => {
+    if (selectedDepartment) {
+      // Filter sections based on selected department
+      const filteredSections = [
+        ...new Set(batches.filter((batch) => batch.department === selectedDepartment).map((batch) => batch.section)),
+      ].filter(Boolean)
+
+      setSections(filteredSections)
+
+      // Reset section if current selection is not valid for new department
+      if (selectedSection && !filteredSections.includes(selectedSection)) {
+        setSelectedSection("")
+      }
+    } else {
+      // If no department selected, show all sections
+      const allSections = [...new Set(batches.map((batch) => batch.section))].filter(Boolean)
+      setSections(allSections)
+    }
+  }, [selectedDepartment, batches])
+
   const handleCourseChange = (e) => {
     setSelectedCourse(e.target.value)
     setAttendanceRecords([]) // Clear previous records
@@ -51,6 +84,27 @@ const AttendancePage = () => {
 
   const handleBatchChange = (e) => {
     setSelectedBatch(e.target.value)
+    setAttendanceRecords([]) // Clear previous records
+
+    // Auto-select department and section if batch has them
+    const selectedBatchObj = batches.find((batch) => batch.batchName === e.target.value)
+    if (selectedBatchObj) {
+      if (selectedBatchObj.department) {
+        setSelectedDepartment(selectedBatchObj.department)
+      }
+      if (selectedBatchObj.section) {
+        setSelectedSection(selectedBatchObj.section)
+      }
+    }
+  }
+
+  const handleDepartmentChange = (e) => {
+    setSelectedDepartment(e.target.value)
+    setAttendanceRecords([]) // Clear previous records
+  }
+
+  const handleSectionChange = (e) => {
+    setSelectedSection(e.target.value)
     setAttendanceRecords([]) // Clear previous records
   }
 
@@ -69,7 +123,13 @@ const AttendancePage = () => {
       setError("")
       setSuccess("")
 
-      await AttendanceService.generateAttendanceTemplate(facultyId, selectedCourse, selectedBatch)
+      await AttendanceService.generateAttendanceTemplate(
+        facultyId,
+        selectedCourse,
+        selectedBatch,
+        selectedDepartment || null,
+        selectedSection || null,
+      )
 
       setSuccess("Template generated and downloaded successfully")
     } catch (err) {
@@ -91,7 +151,12 @@ const AttendancePage = () => {
       setError("")
       setSuccess("")
 
-      const result = await AttendanceService.uploadAttendance(facultyId, file)
+      const result = await AttendanceService.uploadAttendance(
+        facultyId,
+        file,
+        selectedDepartment || null,
+        selectedSection || null,
+      )
 
       setSuccess("Attendance uploaded successfully")
       setFile(null)
@@ -124,6 +189,8 @@ const AttendancePage = () => {
         facultyId,
         selectedCourse,
         selectedBatch,
+        selectedDepartment || null,
+        selectedSection || null,
       )
 
       setAttendanceRecords(records)
@@ -146,7 +213,13 @@ const AttendancePage = () => {
       setError("")
       setSuccess("")
 
-      await AttendanceService.generateAttendanceReport(facultyId, selectedCourse, selectedBatch)
+      await AttendanceService.generateAttendanceReport(
+        facultyId,
+        selectedCourse,
+        selectedBatch,
+        selectedDepartment || null,
+        selectedSection || null,
+      )
 
       setSuccess("Report generated and downloaded successfully")
     } catch (err) {
@@ -176,6 +249,12 @@ const AttendancePage = () => {
             : course.type
 
     return `${course.code} - ${course.title} (${courseType})`
+  }
+
+  // Get unique batch names to prevent duplicates in dropdown
+  const getUniqueBatchNames = () => {
+    const uniqueBatchNames = [...new Set(batches.map((batch) => batch.batchName))]
+    return uniqueBatchNames
   }
 
   return (
@@ -228,9 +307,38 @@ const AttendancePage = () => {
               <label htmlFor="batch-select">Select Batch:</label>
               <select id="batch-select" value={selectedBatch} onChange={handleBatchChange} disabled={loading}>
                 <option value="">-- Select Batch --</option>
-                {batches.map((batch) => (
-                  <option key={batch.id} value={batch.batchName}>
-                    {batch.batchName} - {batch.department} {batch.section ? `(${batch.section})` : ""}
+                {getUniqueBatchNames().map((batchName) => (
+                  <option key={batchName} value={batchName}>
+                    {batchName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label htmlFor="department-select">Select Department (Optional):</label>
+              <select
+                id="department-select"
+                value={selectedDepartment}
+                onChange={handleDepartmentChange}
+                disabled={loading}
+              >
+                <option value="">-- All Departments --</option>
+                {departments.map((dept) => (
+                  <option key={dept} value={dept}>
+                    {dept}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label htmlFor="section-select">Select Section (Optional):</label>
+              <select id="section-select" value={selectedSection} onChange={handleSectionChange} disabled={loading}>
+                <option value="">-- All Sections --</option>
+                {sections.map((sect) => (
+                  <option key={sect} value={sect}>
+                    {sect}
                   </option>
                 ))}
               </select>
@@ -268,6 +376,19 @@ const AttendancePage = () => {
                 <p>
                   <strong>Batch:</strong> {selectedBatch}
                 </p>
+                {selectedDepartment && (
+                  <p>
+                    <strong>Department:</strong> {selectedDepartment}
+                  </p>
+                )}
+                {selectedSection && (
+                  <p>
+                    <strong>Section:</strong> {selectedSection}
+                  </p>
+                )}
+                <p>
+                  <strong>Total Records:</strong> {attendanceRecords.length}
+                </p>
               </div>
               <div className="table-container">
                 <table className="attendance-table">
@@ -276,6 +397,8 @@ const AttendancePage = () => {
                       <th>Student ID</th>
                       <th>Student Name</th>
                       <th>Roll No</th>
+                      <th>Department</th>
+                      <th>Section</th>
                       <th>Total Periods</th>
                       <th>Periods Attended</th>
                       <th>Attendance %</th>
@@ -288,6 +411,8 @@ const AttendancePage = () => {
                         <td>{record.studentId}</td>
                         <td>{record.studentName}</td>
                         <td>{record.studentDno}</td>
+                        <td>{record.department || "-"}</td>
+                        <td>{record.section || "-"}</td>
                         <td>{record.totalPeriods}</td>
                         <td>{record.periodsAttended}</td>
                         <td>{record.attendancePercentage.toFixed(2)}%</td>
@@ -306,4 +431,3 @@ const AttendancePage = () => {
 }
 
 export default AttendancePage
-

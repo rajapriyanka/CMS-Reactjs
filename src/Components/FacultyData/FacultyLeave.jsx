@@ -6,6 +6,8 @@ import { format } from "date-fns"
 import { useNavigate } from "react-router-dom"
 import FacultyNavbar from "../Land/FacultyNavbar"
 import "./FacultyLeave.css"
+import { toast, ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const FacultyLeave = () => {
   const [activeTab, setActiveTab] = useState("request")
@@ -79,17 +81,17 @@ const FacultyLeave = () => {
         if (err.response) {
           console.error("Error response:", err.response.status, err.response.data)
           if (err.response.status === 403) {
-            setError("You don't have permission to view faculty list. Please check your login status.")
+            toast.error("You don't have permission to view faculty list. Please check your login status.")
             if (err.response.data && err.response.data.message === "Expired or invalid token") {
               localStorage.removeItem("token")
               localStorage.removeItem("facultyId")
               navigate("/login")
             }
           } else {
-            setError(err.response.data?.message || "Failed to load faculty list")
+            toast.error(err.response.data?.message || "Failed to load faculty list")
           }
         } else {
-          setError("Network error. Please check your connection.")
+          toast.error("Network error. Please check your connection.")
         }
       } finally {
         setLoading(false)
@@ -110,12 +112,12 @@ const FacultyLeave = () => {
         if (err.response) {
           console.error("Error response:", err.response.status, err.response.data)
           if (err.response.status === 403) {
-            setError("You don't have permission to view leave history.")
+            toast.error("You don't have permission to view leave history.")
           } else {
-            setError(err.response.data?.message || "Failed to load leave history")
+            toast.error(err.response.data?.message || "Failed to load leave history")
           }
         } else {
-          setError("Network error. Please check your connection.")
+          toast.error("Network error. Please check your connection.")
         }
       } finally {
         setLoading(false)
@@ -136,12 +138,12 @@ const FacultyLeave = () => {
         if (err.response) {
           console.error("Error response:", err.response.status, err.response.data)
           if (err.response.status === 403) {
-            setError("You don't have permission to view pending approvals.")
+            toast.error("You don't have permission to view pending approvals.")
           } else {
-            setError(err.response.data?.message || "Failed to load pending approvals")
+            toast.error(err.response.data?.message || "Failed to load pending approvals")
           }
         } else {
-          setError("Network error. Please check your connection.")
+          toast.error("Network error. Please check your connection.")
         }
       } finally {
         setLoading(false)
@@ -214,11 +216,12 @@ const FacultyLeave = () => {
     if (name === "fromDate") {
       const selectedFromDate = new Date(value)
       if (selectedFromDate > twoMonthsFromToday) {
-        setError("From date cannot be more than 2 months from today.")
+        setError("Oops! You can only apply for leave up to 2 months in advance.")
+        toast.error("Oops! You can only apply for leave up to 2 months in advance.")
         // Still update the form data to show the invalid selection
       } else {
         // Only clear error if it was related to date range
-        if (error === "From date cannot be more than 2 months from today.") {
+        if (error === "Oops! You can only apply for leave up to 2 months in advance.") {
           setError("")
         }
       }
@@ -231,6 +234,8 @@ const FacultyLeave = () => {
 
       if (fromDate && toDate && !validateDateRange(fromDate, toDate)) {
         setError("Leave duration cannot exceed 15 days. Ask in person.")
+        toast.error("Leave duration cannot exceed 15 days. Ask in person.")
+
       } else if (error === "Leave duration cannot exceed 15 days. Ask in person.") {
         // Only clear error if it was related to date range and not the 2-month validation
         if (name !== "fromDate" || (name === "fromDate" && new Date(value) <= twoMonthsFromToday)) {
@@ -259,6 +264,7 @@ const FacultyLeave = () => {
     // Validate date range before submission
     if (!validateDateRange(formData.fromDate, formData.toDate)) {
       setError("Leave duration cannot exceed 15 days")
+      toast.error("Leave duration cannot exceed 15 days")
       return
     }
 
@@ -269,7 +275,8 @@ const FacultyLeave = () => {
     const selectedFromDate = new Date(formData.fromDate)
 
     if (selectedFromDate > twoMonthsFromToday) {
-      setError("From date cannot be more than 2 months from today.")
+      setError("Oops! You can only apply for leave up to 2 months in advance.")
+      toast.error("Oops! You can only apply for leave up to 2 months in advance.")
       return
     }
 
@@ -292,6 +299,7 @@ const FacultyLeave = () => {
       console.log("Leave request response:", response.data)
 
       setSuccess("Leave request submitted successfully!")
+      toast.success("Leave request submitted successfully!")
       setFormData({
         approverId: "",
         subject: "",
@@ -634,6 +642,7 @@ const FacultyLeave = () => {
             </div>
           )}
         </div>
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
   )

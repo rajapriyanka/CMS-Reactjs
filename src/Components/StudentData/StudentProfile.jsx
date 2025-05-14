@@ -313,9 +313,9 @@ const StudentProfile = () => {
             <div className="profile-modal">
               <div className="modal-content">
                 <h2>Student Profile</h2>
-                <div className="user-id">
+                {/* <div className="user-id">
                   <p>Student ID: {studentId}</p>
-                </div>
+                </div> */}
                 <div className="user-id">
                   <p>Email: {email}</p>
                 </div>

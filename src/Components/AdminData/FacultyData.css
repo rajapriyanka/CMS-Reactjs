@@ -108,6 +108,8 @@
   border: 1px solid #ddd;
   padding: 12px;
   text-align: left;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: bolder;
 }
 
 .faculty-list th {
@@ -117,7 +119,7 @@
 
 
 .faculty-list tr {
-  background-color: #f2f2f2;
+  background-color: #f2f2f261;
   color: #013c28;
 }
 
@@ -209,7 +211,7 @@
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px #013c28;
+  box-shadow: 0 8px 10px #013c28;
   max-width: 600px;
   width: 100%;
   margin-bottom: 20px;

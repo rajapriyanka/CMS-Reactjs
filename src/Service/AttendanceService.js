@@ -13,10 +13,22 @@ class AttendanceService {
   }
 
   // Generate attendance template for a specific course and batch
-  static async generateAttendanceTemplate(facultyId, courseId, batchName) {
+  static async generateAttendanceTemplate(facultyId, courseId, batchName, department = null, section = null) {
     try {
+      let url = `${this.BASE_URL}/api/attendance/template?facultyId=${facultyId}&courseId=${courseId}&batchName=${batchName}`
+      
+      // Add department parameter if provided
+      if (department) {
+        url += `&department=${encodeURIComponent(department)}`
+      }
+      
+      // Add section parameter if provided
+      if (section) {
+        url += `&section=${encodeURIComponent(section)}`
+      }
+      
       const response = await axios.get(
-        `${this.BASE_URL}/api/attendance/template?facultyId=${facultyId}&courseId=${courseId}&batchName=${batchName}`,
+        url,
         {
           headers: { 
             Authorization: `Bearer ${this.getToken()}`,
@@ -26,10 +38,17 @@ class AttendanceService {
       )
       
       // Create a download link for the file
-      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const url2 = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `attendance_template_${courseId}_${batchName}.xlsx`)
+      link.href = url2
+      
+      // Include department and section in filename if provided
+      let filename = `attendance_template_${courseId}_${batchName}`
+      if (department) filename += `_${department}`
+      if (section) filename += `_${section}`
+      filename += '.xlsx'
+      
+      link.setAttribute('download', filename)
       document.body.appendChild(link)
       link.click()
       link.remove()
@@ -42,13 +61,25 @@ class AttendanceService {
   }
 
   // Upload filled attendance Excel file
-  static async uploadAttendance(facultyId, file) {
+  static async uploadAttendance(facultyId, file, department = null, section = null) {
     try {
       const formData = new FormData()
       formData.append('file', file)
       
+      let url = `${this.BASE_URL}/api/attendance/upload?facultyId=${facultyId}`
+      
+      // Add department parameter if provided
+      if (department) {
+        url += `&department=${encodeURIComponent(department)}`
+      }
+      
+      // Add section parameter if provided
+      if (section) {
+        url += `&section=${encodeURIComponent(section)}`
+      }
+      
       const response = await axios.post(
-        `${this.BASE_URL}/api/attendance/upload?facultyId=${facultyId}`,
+        url,
         formData,
         {
           headers: { 
@@ -66,10 +97,21 @@ class AttendanceService {
   }
 
   // Get attendance records for a faculty's course and batch
-  static async getAttendanceByFacultyCourseAndBatch(facultyId, courseId, batchName) {
+  static async getAttendanceByFacultyCourseAndBatch(facultyId, courseId, batchName, department = null, section = null) {
     try {
+      let url = `${this.BASE_URL}/api/attendance/faculty/${facultyId}/course/${courseId}/batch/${batchName}`
+      
+      // Add query parameters if provided
+      const params = new URLSearchParams()
+      if (department) params.append('department', department)
+      if (section) params.append('section', section)
+      
+      if (params.toString()) {
+        url += `?${params.toString()}`
+      }
+      
       const response = await axios.get(
-        `${this.BASE_URL}/api/attendance/faculty/${facultyId}/course/${courseId}/batch/${batchName}`,
+        url,
         {
           headers: { Authorization: `Bearer ${this.getToken()}` }
         }
@@ -119,10 +161,22 @@ class AttendanceService {
   }
 
   // Generate attendance report Excel for a course and batch
-  static async generateAttendanceReport(facultyId, courseId, batchName) {
+  static async generateAttendanceReport(facultyId, courseId, batchName, department = null, section = null) {
     try {
+      let url = `${this.BASE_URL}/api/attendance/report?facultyId=${facultyId}&courseId=${courseId}&batchName=${batchName}`
+      
+      // Add department parameter if provided
+      if (department) {
+        url += `&department=${encodeURIComponent(department)}`
+      }
+      
+      // Add section parameter if provided
+      if (section) {
+        url += `&section=${encodeURIComponent(section)}`
+      }
+      
       const response = await axios.get(
-        `${this.BASE_URL}/api/attendance/report?facultyId=${facultyId}&courseId=${courseId}&batchName=${batchName}`,
+        url,
         {
           headers: { 
             Authorization: `Bearer ${this.getToken()}`,
@@ -132,10 +186,17 @@ class AttendanceService {
       )
       
       // Create a download link for the file
-      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const url2 = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `attendance_report_${courseId}_${batchName}.xlsx`)
+      link.href = url2
+      
+      // Include department and section in filename if provided
+      let filename = `attendance_report_${courseId}_${batchName}`
+      if (department) filename += `_${department}`
+      if (section) filename += `_${section}`
+      filename += '.xlsx'
+      
+      link.setAttribute('download', filename)
       document.body.appendChild(link)
       link.click()
       link.remove()

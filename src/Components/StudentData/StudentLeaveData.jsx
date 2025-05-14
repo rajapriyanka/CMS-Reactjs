@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { toast, ToastContainer } from "react-toastify"
 import { format, differenceInDays } from "date-fns"
 import axios from "axios"
 import "./StudentLeaveData.css"
 import StudentNavbar from "../Land/StudentNavbar"
+
 
 const BASE_URL = "http://localhost:8080"
 
@@ -136,6 +138,7 @@ const StudentLeaveData = () => {
     if ((name === "fromDate" || name === "toDate") && updatedFormData.fromDate && updatedFormData.toDate) {
       if (!validateDateRange(updatedFormData.fromDate, updatedFormData.toDate)) {
         setDateError("Leave duration cannot exceed 15 days. Please contact faculty in person for longer leaves.")
+        toast.error("Leave duration cannot exceed 15 days. Please contact faculty in person for longer leaves.")
       } else if (
         dateError === "Leave duration cannot exceed 15 days. Please contact faculty in person for longer leaves."
       ) {
@@ -453,6 +456,7 @@ const StudentLeaveData = () => {
             </div>
           )}
         </div>
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
   )

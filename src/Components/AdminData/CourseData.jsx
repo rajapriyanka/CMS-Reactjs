@@ -121,23 +121,27 @@ const CourseData = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-  
+
     if (name === "title") {
       if (!/^[A-Za-z\s]*$/.test(value)) {
         return
       }
-      setFormData((prev) => ({ ...prev, [name]: value }))
-      return
     }
-  
+
     if (name === "code") {
-      // Only allow alphanumeric values, must start with a letter, and 5-7 characters
-      if (/^[A-Za-z][A-Za-z0-9]{0,6}$/.test(value) || value === "") {
-        setFormData((prev) => ({ ...prev, [name]: value }))
-      }
-      return
-    }
+      // Block input longer than 7 characters
+      if (value.length > 7) return;
   
+      // Only allow alphanumeric, must start with letter
+      if (
+        value === "" ||
+        /^[A-Za-z][A-Za-z0-9]*$/.test(value) // First letter, rest alphanumeric
+      ) {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+      return; // Return early to avoid falling through to setFormData again
+    }
+
     if (name === "contactPeriods") {
       if (!/^[1-9]?$/.test(value)) {
         setErrors((prevErrors) => ({
@@ -147,14 +151,10 @@ const CourseData = () => {
         return
       }
       setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }))
-      setFormData((prev) => ({ ...prev, [name]: value }))
-      return
     }
-  
-    // Default update for other fields
+
     setFormData((prevState) => ({ ...prevState, [name]: value }))
   }
-  
 
   const validateForm = () => {
     const newErrors = {}

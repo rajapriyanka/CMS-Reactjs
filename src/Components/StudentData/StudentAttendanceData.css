@@ -16,6 +16,7 @@
 
 .stud-attendance-header h2 {
     color: #013c28;
+    text-shadow: 2px 2px 5px #eeffd8;
     
 }
 
@@ -115,4 +116,9 @@
     .stats-cards {
         flex-direction: column;
     }
+}
+
+.stud-attendance-info p{
+    color: white;
+    text-shadow: 2px 2px 5px #013c28;
 }

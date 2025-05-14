@@ -100,7 +100,7 @@ const FacultyData = () => {
       newErrors.name = "Name should have at least 5 characters."
       valid = false
     }
-    if (!formData.email.trim()) {    
+    if (!formData.email.trim()) {
       newErrors.email = "Email is required.";
       valid = false;
     } else if (!/^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9.-]+\.(com|in|org)$/i.test(formData.email)) {

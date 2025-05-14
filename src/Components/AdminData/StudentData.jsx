@@ -120,10 +120,10 @@ const StudentData = () => {
       valid = false
     }
 
-    if (!formData.email.trim()) {
+    if (!formData.user.email?.trim()) {
       newErrors.email = "Email is required.";
       valid = false;
-    } else if (!/^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9.-]+\.(com|in|org)$/i.test(formData.email)) {
+    } else if (!/^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9.-]+\.(com|in|org)$/i.test(formData.user.email)) {
       newErrors.email = "Enter a valid email starting with a letter and ending in '.com', '.in', or '.org'.";
       valid = false;
     }
@@ -471,15 +471,6 @@ if (!formData.dno.trim()) {
                 />
                 {errors.email && <span className="error-message">{errors.email}</span>}
                 <input
-                  type="password"
-                  name="password"
-                  value={formData.user.password}
-                  onChange={handleInputChange}
-                  placeholder="Password"
-                  required
-                />
-                {errors.password && <span className="error-message">{errors.password}</span>}
-                <input
                   type="tel"
                   name="mobileNumber"
                   value={formData.mobileNumber}
@@ -488,6 +479,16 @@ if (!formData.dno.trim()) {
                   required
                 />
                 {errors.mobileNumber && <span className="error-message">{errors.mobileNumber}</span>}
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.user.password}
+                  onChange={handleInputChange}
+                  placeholder="Password"
+                  required
+                />
+                {errors.password && <span className="error-message">{errors.password}</span>}
+                
                 <input
                   type="text"
                   name="dno"
