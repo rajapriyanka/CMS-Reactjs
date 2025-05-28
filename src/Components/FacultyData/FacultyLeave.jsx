@@ -602,7 +602,7 @@ const FacultyLeave = () => {
                     <thead>
                       <tr>
                         <th>Faculty</th>
-                        <th>Subject</th>
+                        <th>Reason/Subject</th>
                         <th>From</th>
                         <th>To</th>
                         <th>Requested On</th>
