@@ -216,7 +216,7 @@ const FacultyCourse = () => {
 
               <label>Select Batch :</label>
               <select value={selectedBatchId} onChange={(e) => setSelectedBatchId(e.target.value)} className="dropdown">
-                <option value="">-- Select Batch --</option>
+                <option value="">-- Select Batch  --</option>
                 {batches.map((batch) => (
                   <option key={batch.id} value={batch.id}>
                     {batch.batchName} - {batch.department} ({batch.section})
